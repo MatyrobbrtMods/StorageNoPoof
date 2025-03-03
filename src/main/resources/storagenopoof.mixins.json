@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.matyrobbrt.storagenopoof.mixin",
+  "mixins": [
+    "LevelChunkMixin",
+    "ChunkSerializerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
