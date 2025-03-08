@@ -23,7 +23,7 @@ public class LevelChunkMixin {
 
     @WrapOperation(method = "promotePendingBlockEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;loadStatic(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/world/level/block/entity/BlockEntity;"))
     private BlockEntity attemptToPreserveInventories(BlockPos pos, BlockState state, CompoundTag tag, HolderLookup.Provider registries, Operation<BlockEntity> operation) {
-        var pres = StorageNoPoof.attemptToPreserveInventories(pos, state, tag, registries, level);
+        var pres = StorageNoPoof.attemptToPreserveInventories(pos, state, tag, registries, level, (LevelChunk) ((Object) this));
         return pres == null ? operation.call(pos, state, tag, registries) : pres;
     }
 }

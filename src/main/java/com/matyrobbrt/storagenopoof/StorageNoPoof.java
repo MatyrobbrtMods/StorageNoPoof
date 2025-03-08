@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -70,7 +71,7 @@ public class StorageNoPoof {
     }
 
     @Nullable
-    public static BlockEntity attemptToPreserveInventories(BlockPos pos, BlockState state, CompoundTag tag, HolderLookup.Provider registries, Level level) {
+    public static BlockEntity attemptToPreserveInventories(BlockPos pos, BlockState state, CompoundTag tag, HolderLookup.Provider registries, Level level, @Nullable LevelChunk chunk) {
         if (state.isAir()) {
             ResourceLocation id = ResourceLocation.tryParse(tag.getString("id"));
             if (id != null) {
@@ -79,7 +80,12 @@ public class StorageNoPoof {
                     var preservation = StorageNoPoof.attemptPreservation(id, tag, registries);
                     if (preservation != null) {
                         var newState = StorageNoPoof.PRESERVER.get().defaultBlockState();
-                        level.setBlock(pos, newState, Block.UPDATE_ALL);
+
+                        if (chunk != null) {
+                            chunk.setBlockState(pos, newState, false);
+                        } else {
+                            level.setBlock(pos, newState, Block.UPDATE_ALL);
+                        }
 
                         var be = new PreserverBlockEntity(pos, newState);
 
